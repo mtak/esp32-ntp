@@ -1,0 +1,3 @@
+key,type,encoding,value
+ntpcfg,namespace,,
+disp.en,data,i32,0
