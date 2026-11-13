@@ -81,6 +81,7 @@ GpsDiscipline::GpsDiscipline()
     lastPpsSec1900(0), lastPpsFrac(0), lastPpsMonotonicUs(0),
     lastNmeaUnixSec(0), lastNmeaUpdateUs(0), ppsSeq(0), ppsEdgeUs(0),
     ppsCapValue(0), ppsSeqSeen(0), prevPpsCapValue(0),
+    diagPrevPpsCapValue(0), diagPrevPpsEdgeUs(0), diagPpsIntervalTicks(0),
     fitHead(0), fitCount(0), tickExt(0), tickLastRaw(0), tickInit(false),
     fitTicksPerSec(80000000.0), fitResidualTicks(0), fitValid(false),
     statLastOffsetSec(0), statRmsOffsetSec(0), statFrequencyPpm(0),
@@ -939,6 +940,15 @@ void GpsDiscipline::handle_pps_deferred() {
   }
   ppsSeqSeen = seq;
 
+  // Diagnostic interval is independent of NMEA validity. A long gap can
+  // alias the 32-bit capture counter, so report it as unavailable.
+  diagPpsIntervalTicks = 0;
+  if (diagPrevPpsEdgeUs != 0 &&
+      ppsEdgeCapture - diagPrevPpsEdgeUs < 20000000ULL)
+    diagPpsIntervalTicks = capValue - diagPrevPpsCapValue;
+  diagPrevPpsCapValue = capValue;
+  diagPrevPpsEdgeUs = ppsEdgeCapture;
+
   uint64_t nowUs = esp_timer_get_time();
   /*
    * How long after the hardware capture this handler actually ran. Exported
@@ -1131,7 +1141,11 @@ void GpsDiscipline::handle_pps_deferred() {
 
     gpsLock = true;
     if (!wasLocked) {
-      ESP_LOGI(TAG, "GPS locked - PPS disciplining active (latency: %" PRId64 "us)", elapsedUs);
+      struct tm utcTm = {};
+      gmtime_r(&ppsSec, &utcTm);
+      ESP_LOGI(TAG, "GPS locked - PPS associated with %04d-%02d-%02d %02d:%02d:%02dZ (latency: %" PRId64 "us)",
+               utcTm.tm_year + 1900, utcTm.tm_mon + 1, utcTm.tm_mday,
+               utcTm.tm_hour, utcTm.tm_min, utcTm.tm_sec, elapsedUs);
     }
 
     // RMS offset: only include clean samples that actually carry a measurement
@@ -1225,6 +1239,18 @@ void GpsDiscipline::getStats(GpsStats& out) const {
   out.frequencyPpm = statFrequencyPpm;
   out.ppsJitterSec = statPpsJitterSec;
   out.ppsCount = statPpsCount;
+  uint32_t capSeq = 0;
+  uint64_t capEdgeUs = 0;
+  for (int i = 0; i < 8; ++i) {
+    capSeq = ppsSeq;
+    if (capSeq & 1) continue;
+    __sync_synchronize();
+    capEdgeUs = ppsEdgeUs;
+    __sync_synchronize();
+    if (capSeq == ppsSeq) break;
+  }
+  out.ppsCaptureCount = capSeq / 2;
+  out.ppsIntervalUs = (double)diagPpsIntervalTicks / 80.0;
   out.ppsRejectCount = ppsRejectCount;
   out.nmeaMispairCount = statMispairCount;
   out.nmeaLateCount = statLateNmeaCount;
@@ -1251,6 +1277,8 @@ void GpsDiscipline::getStats(GpsStats& out) const {
   out.hdop        = qualityFresh ? qHdop : 0;
   out.vdop        = qualityFresh ? qVdop : 0;
   out.altitudeM   = qualityFresh ? qAltitudeM : 0;
+  out.ppsCaptureAgeSec = capSeq && capEdgeUs && nowUs >= capEdgeUs
+                       ? (double)(nowUs - capEdgeUs) / 1e6 : -1.0;
   out.nmeaAgeMs = lastNmeaUpdateUs ? (uint32_t)((nowUs - lastNmeaUpdateUs) / 1000) : 0;
   out.fitValid      = fitValid;
   out.fitSamples    = (uint32_t)fitCount;

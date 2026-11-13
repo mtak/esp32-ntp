@@ -36,6 +36,9 @@ struct GpsStats {
     double frequencyPpm;      // estimated local oscillator freq error
     double ppsJitterSec;      // inter-PPS interval jitter (sigma)
     uint32_t ppsCount;        // total PPS edges received
+    uint32_t ppsCaptureCount; // raw MCPWM rising edges, including without a fix
+    double ppsCaptureAgeSec;  // -1 until the first edge
+    double ppsIntervalUs;     // latest hardware interval; 0 until two close edges
     uint32_t ppsRejectCount;  // PPS pulses rejected as outliers
     uint32_t nmeaMispairCount;// PPS pulses skipped as PPS/NMEA second mispairs
     uint32_t nmeaLateCount;   // late RMC labels bridged using previous PPS
@@ -177,6 +180,9 @@ private:
   volatile uint32_t ppsCapValue;
   uint32_t ppsSeqSeen;
   uint32_t prevPpsCapValue;
+  uint32_t diagPrevPpsCapValue;
+  uint64_t diagPrevPpsEdgeUs;
+  uint32_t diagPpsIntervalTicks;
 
   // --- Phase/frequency model -------------------------------------------
   // The capture timer counts at 80 MHz and wraps every ~53.7 s, so ticks are

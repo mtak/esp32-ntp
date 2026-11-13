@@ -94,6 +94,15 @@ void WebServer::sendMetrics() {
     "# HELP ntp_pps_count Total PPS edges received\n"
     "# TYPE ntp_pps_count counter\n"
     "ntp_pps_count %" PRIu32 "\n"
+    "# HELP ntp_pps_capture_total Raw MCPWM rising edges, including without valid UTC\n"
+    "# TYPE ntp_pps_capture_total counter\n"
+    "ntp_pps_capture_total %" PRIu32 "\n"
+    "# HELP ntp_pps_capture_age_seconds Time since last raw PPS edge; -1 before any edge\n"
+    "# TYPE ntp_pps_capture_age_seconds gauge\n"
+    "ntp_pps_capture_age_seconds %.3f\n"
+    "# HELP ntp_pps_interval_microseconds Last hardware-captured interval; 0 until two close edges\n"
+    "# TYPE ntp_pps_interval_microseconds gauge\n"
+    "ntp_pps_interval_microseconds %.2f\n"
     "# HELP ntp_pps_rejects_total PPS pulses rejected as outliers\n"
     "# TYPE ntp_pps_rejects_total counter\n"
     "ntp_pps_rejects_total %" PRIu32 "\n"
@@ -264,6 +273,9 @@ void WebServer::sendMetrics() {
     uptimeSec,
     reqCount,
     gs.ppsCount,
+    gs.ppsCaptureCount,
+    gs.ppsCaptureAgeSec,
+    gs.ppsIntervalUs,
     gs.ppsRejectCount,
     gs.nmeaMispairCount,
     gs.nmeaLateCount,
