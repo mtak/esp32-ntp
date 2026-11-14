@@ -15,7 +15,8 @@ public:
   esp_err_t setTime(time_t t);
   // die temp, 0.25C steps
   bool readTempC(float& out);
-  esp_err_t enable32kOutput();
+  // Keep the battery oscillator running; enable 32k output only when wired.
+  esp_err_t configure32kOutput(bool enabled);
 
 private:
   esp_err_t rd(uint8_t reg, uint8_t* buf, size_t n);

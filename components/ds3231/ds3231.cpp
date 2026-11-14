@@ -113,7 +113,7 @@ bool Ds3231::readTempC(float& out) {
   return true;
 }
 
-esp_err_t Ds3231::enable32kOutput() {
+esp_err_t Ds3231::configure32kOutput(bool enabled) {
   // keep oscillator running on battery
   uint8_t ctl;
   esp_err_t err = rd(kRegControl, &ctl, 1);
@@ -126,8 +126,10 @@ esp_err_t Ds3231::enable32kOutput() {
   uint8_t st;
   err = rd(kRegStatus, &st, 1);
   if (err != ESP_OK) return err;
-  if (!(st & kStatusEn32k)) {
-    st |= kStatusEn32k;
+  uint8_t desired = enabled ? (uint8_t)(st | kStatusEn32k)
+                            : (uint8_t)(st & ~kStatusEn32k);
+  if (desired != st) {
+    st = desired;
     err = wr(kRegStatus, &st, 1);
   }
   return err;

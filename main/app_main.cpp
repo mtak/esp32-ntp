@@ -294,7 +294,8 @@ void app_main() {
     g_rtc = new Ds3231();
     if (g_rtc->begin(Config::getRtcSdaPin(), Config::getRtcSclPin()) == ESP_OK) {
       g_rtcPresent = 1;
-      g_rtc->enable32kOutput();
+      if (g_rtc->configure32kOutput(Config::getRtc32kPin() >= 0) != ESP_OK)
+        ESP_LOGW(TAG, "DS3231 oscillator/output configuration failed");
       float bootTempC;
       if (g_rtc->readTempC(bootTempC))
         ESP_LOGI(TAG, "DS3231 die temp %.2fC", bootTempC);
