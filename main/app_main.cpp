@@ -30,6 +30,7 @@
 #include "web_server.h"
 #include "w5500_eth.h"
 #include "wifi_sta.h"
+#include "status_leds.h"
 
 static const char* TAG = "APP";
 
@@ -500,6 +501,7 @@ void app_main() {
                           PRIO_NTP, nullptr, CORE_NET);
   if (g_rtc)
     xTaskCreatePinnedToCore(rtc_task, "rtc_hk", 3072, nullptr, 3, nullptr, CORE_NET);
+  status_leds_start(g_gps);
   ESP_LOGI(TAG, "tasks started: discipline(prio %d core %d) ntp(prio %d core %d)",
            PRIO_DISCIPLINE, CORE_CLOCK, PRIO_NTP, CORE_NET);
   /* app_main returns; the tasks own the system from here. */

@@ -83,7 +83,7 @@ GpsDiscipline::GpsDiscipline()
     fitHead(0), fitCount(0), tickExt(0), tickLastRaw(0), tickInit(false),
     fitTicksPerSec(80000000.0), fitResidualTicks(0), fitValid(false),
     statLastOffsetSec(0), statRmsOffsetSec(0), statFrequencyPpm(0),
-    statPpsJitterSec(0), statPpsCount(0), ppsRejectCount(0), prevPpsMonotonicUs(0),
+    statPpsJitterSec(0), statPpsCount(0), acceptedPpsCount(0), ppsRejectCount(0), prevPpsMonotonicUs(0),
     ppsIntervalMeanUs(0), ppsJitterVarUs2(0),
     clockCorrectionUs(0),
     prevPpsEdgeForOffset(0), lastAppliedTotalCorrUs(0),
@@ -1144,6 +1144,7 @@ void GpsDiscipline::handle_pps_deferred() {
     }
 
     statPpsCount++;
+    if (!outlier) __atomic_add_fetch(&acceptedPpsCount, 1, __ATOMIC_RELAXED);
 
     // PPS jitter: EWMA variance on inter-PPS interval (~20-sample window)
     // Only include non-outlier intervals to avoid corrupting the jitter estimate.

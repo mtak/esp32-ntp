@@ -25,6 +25,7 @@ deployed clock needs no rebuild and no serial cable. See [Configuration](#config
 - **Self-healing:** task watchdog reboots on a hang, and a W5500 health check restarts the
   device if the network chip wedges.
 - **Optional display:** MAX7219 LED matrices on SPI, or an SSD1306 or SH1106 OLED on I2C.
+- **Optional status LEDs:** separate LOCK and accepted-PPS indicators with hardware PWM brightness.
 
 ## Accuracy
 
@@ -253,6 +254,16 @@ an optional password. Wiring settings (every GPIO, SPI host, SPI clock, the GPS 
 pin) sit behind an **Advanced** disclosure, because a wrong pin there takes the clock off the
 network on the next restart.
 
+**Advanced → Status LEDs** offers two optional active-HIGH outputs. `led.lock` follows the
+same synchronization and holdover state used by NTP; `led.pps` flashes for about 75 ms on
+each accepted PPS sample. Both GPIOs default to `-1` (disabled). Connect each LED with an
+external current-limiting resistor. LEDC hardware generates the 1 kHz PWM without software
+PWM interrupts. The separate 0–100% brightness settings help balance different LED colors;
+the percentage is PWM duty cycle, not calibrated perceived brightness. All four settings
+take effect after the page saves and restarts. A GPIO cannot overlap an active peripheral
+or the other LED. On the default ESP32 display wiring, GPIO18 and GPIO23 already serve the
+MAX7219 clock and data lines; disable or move that display before assigning those pins to LEDs.
+
 Saving writes only the fields you changed and reboots. Values are validated before anything reaches
 flash, so an out-of-range pin or a malformed IP is refused with nothing written. Fields marked `*`
 need the restart to take effect.
@@ -413,6 +424,19 @@ defaults are the S3 set listed under the MCU requirements above.
 | `rtc.sda` | int | `-1`..`33` | R A | SDA pin. -1 = no DS3231 fitted. With one: battery-backed time at boot. |
 | `rtc.scl` | int | `-1`..`33` | R A | SCL pin |
 | `rtc.32k` | int | `-1`..`39` | R A | 32kHz pin. TCXO output, captured as the holdover frequency reference. -1 = not wired. |
+
+#### Status LEDs
+
+| Key | Type | Range | Flags | Setting |
+|---|---|---|---|---|
+| `led.lock` | int | `-1`..output GPIO | R A | LOCK LED pin; `-1` disables. Default `-1`. |
+| `led.pps` | int | `-1`..output GPIO | R A | PPS LED pin; `-1` disables. Default `-1`. |
+| `led.lock_brightness` | int | `0`..`100` | R A | LOCK PWM duty percentage. Default `100`. |
+| `led.pps_brightness` | int | `0`..`100` | R A | PPS PWM duty percentage. Default `100`. |
+
+The web page and configuration registry use the names above. ESP-IDF NVS limits stored
+key names to 15 characters, so preloaded NVS CSV images must use `led.lock_brt` and
+`led.pps_brt` for the two brightness values. The GPIO keys are stored as written.
 
 `net.mode` is a choice between the W5500 Ethernet path and Wi-Fi STA. `pps.cal` and
 `serve.cal` are microsecond trims: `pps.cal` shifts the PPS reference, `serve.cal` is

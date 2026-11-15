@@ -7,6 +7,7 @@
 #include "hal/spi_types.h"
 #include "esp_log.h"
 #include "esp_attr.h"
+#include "driver/gpio.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -262,6 +263,20 @@ const cfg_field_t g_cfg_fields[CFG_COUNT] = {
                        .imin=-1, .imax=PIN_IN_MAX, .idef=-1,
                        .help="TCXO output, captured as the holdover frequency reference. -1 = not wired.",
                        .reboot=true, .advanced=true },
+  [CFG_LED_LOCK] = { .key="led.lock", .label="LOCK GPIO", .group="Status LEDs", .type=CF_INT,
+                     .imin=-1, .imax=PIN_OUT_MAX, .idef=-1,
+                     .help="-1 disables. Active HIGH; use an external current-limiting resistor.",
+                     .reboot=true, .advanced=true },
+  [CFG_LED_PPS] = { .key="led.pps", .label="PPS GPIO", .group="Status LEDs", .type=CF_INT,
+                    .imin=-1, .imax=PIN_OUT_MAX, .idef=-1,
+                    .help="-1 disables. Flashes on accepted PPS events.",
+                    .reboot=true, .advanced=true },
+  [CFG_LED_LOCK_BRIGHTNESS] = { .key="led.lock_brightness", .nvs_key="led.lock_brt",
+                                .label="LOCK brightness (%)", .group="Status LEDs", .type=CF_INT,
+                                .imin=0, .imax=100, .idef=100, .reboot=true, .advanced=true },
+  [CFG_LED_PPS_BRIGHTNESS] = { .key="led.pps_brightness", .nvs_key="led.pps_brt",
+                               .label="PPS brightness (%)", .group="Status LEDs", .type=CF_INT,
+                               .imin=0, .imax=100, .idef=100, .reboot=true, .advanced=true },
 };
 
 typedef struct {
@@ -278,6 +293,7 @@ static bool s_provisioned = false;
 static bool s_ready = false;
 
 static bool is_str(cfg_type_t t) { return t == CF_STR || t == CF_PASS; }
+static const char* storage_key(const cfg_field_t* f) { return f->nvs_key ? f->nvs_key : f->key; }
 
 static void load_defaults(void) {
   for (int i = 0; i < CFG_COUNT; ++i) {
@@ -317,7 +333,7 @@ void cfg_init(bool safe_mode) {
     if (is_str(f->type)) {
       size_t len = CFG_STR_MAX;
       char tmp[CFG_STR_MAX];
-      if (nvs_get_str(h, f->key, tmp, &len) == ESP_OK) {
+      if (nvs_get_str(h, storage_key(f), tmp, &len) == ESP_OK) {
         memcpy(s_val[i].s, tmp, len > CFG_STR_MAX ? CFG_STR_MAX : len);
         s_val[i].s[CFG_STR_MAX - 1] = '\0';
         s_stored[i] = true;
@@ -325,7 +341,7 @@ void cfg_init(bool safe_mode) {
       }
     } else {
       int32_t v;
-      if (nvs_get_i32(h, f->key, &v) == ESP_OK) {
+      if (nvs_get_i32(h, storage_key(f), &v) == ESP_OK) {
         if (v >= f->imin && v <= f->imax) s_val[i].i = v;
         s_stored[i] = true;
         loaded++;
@@ -340,6 +356,47 @@ void cfg_init(bool safe_mode) {
 bool cfg_safe_mode(void)   { return s_safe; }
 bool cfg_provisioned(void) { return s_provisioned; }
 bool cfg_dirty(void)       { return s_dirty; }
+
+static bool led_gpio_valid(int gpio) {
+  if (gpio < 0) return gpio == -1;
+  if (!GPIO_IS_VALID_OUTPUT_GPIO(gpio)) return false;
+#if CONFIG_IDF_TARGET_ESP32
+  if (gpio == 0 || gpio == 1 || gpio == 2 || gpio == 3 ||
+      gpio == 4 || gpio == 5 || gpio == 12 || gpio == 15 ||
+      (gpio >= 6 && gpio <= 11)) return false; /* boot straps, console, flash */
+#elif CONFIG_IDF_TARGET_ESP32S3
+  if (gpio == 0 || gpio == 3 || gpio == 19 || gpio == 20 ||
+      gpio == 43 || gpio == 44 || gpio == 45 || gpio == 46 ||
+      (gpio >= 26 && gpio <= 37)) return false;
+  /* Boot straps, USB, console, flash and module-dependent PSRAM. */
+#endif
+  const cfg_id_t used[] = {
+    CFG_GPS_RX, CFG_GPS_TX, CFG_PPS_GPIO,
+    CFG_RTC_SDA, CFG_RTC_SCL, CFG_RTC_32K,
+  };
+  for (size_t i = 0; i < sizeof(used) / sizeof(used[0]); ++i)
+    if (gpio == cfg_int(used[i])) return false;
+  if (cfg_int(CFG_NET_MODE) == 0) {
+    const cfg_id_t w5[] = { CFG_W5_CS, CFG_W5_MOSI, CFG_W5_MISO, CFG_W5_SCLK, CFG_W5_INT, CFG_W5_RST };
+    for (size_t i = 0; i < sizeof(w5) / sizeof(w5[0]); ++i)
+      if (gpio == cfg_int(w5[i])) return false;
+  }
+  if (cfg_int(CFG_DISP_EN)) {
+    const cfg_id_t spi[] = { CFG_DISP_CS, CFG_DISP_MOSI, CFG_DISP_SCLK };
+    const cfg_id_t i2c[] = { CFG_DISP_SDA, CFG_DISP_SCL };
+    const cfg_id_t* pins = cfg_int(CFG_DISP_TYPE) == 0 ? spi : i2c;
+    size_t count = cfg_int(CFG_DISP_TYPE) == 0 ? 3 : 2;
+    for (size_t i = 0; i < count; ++i)
+      if (gpio == cfg_int(pins[i])) return false;
+  }
+  return true;
+}
+
+bool cfg_led_pins_valid(void) {
+  int lock = cfg_int(CFG_LED_LOCK), pps = cfg_int(CFG_LED_PPS);
+  return led_gpio_valid(lock) && led_gpio_valid(pps) &&
+         (lock < 0 || pps < 0 || lock != pps);
+}
 
 int32_t cfg_int(cfg_id_t id) {
   if (id >= CFG_COUNT) return 0;
@@ -423,6 +480,7 @@ bool cfg_clear(cfg_id_t id) {
 }
 
 esp_err_t cfg_commit(void) {
+  if (!cfg_led_pins_valid()) return ESP_ERR_INVALID_ARG;
   bool anyUnpinned = false;
   for (int i = 0; i < CFG_COUNT; ++i)
     if (!s_stored[i]) { anyUnpinned = true; break; }
@@ -440,8 +498,8 @@ esp_err_t cfg_commit(void) {
   for (int i = 0; i < CFG_COUNT; ++i) {
     if (!s_fdirty[i] && s_stored[i]) continue;
     const cfg_field_t* f = &g_cfg_fields[i];
-    if (is_str(f->type)) err = nvs_set_str(h, f->key, s_val[i].s);
-    else                 err = nvs_set_i32(h, f->key, s_val[i].i);
+    if (is_str(f->type)) err = nvs_set_str(h, storage_key(f), s_val[i].s);
+    else                 err = nvs_set_i32(h, storage_key(f), s_val[i].i);
     if (err != ESP_OK) {
       ESP_LOGE(TAG, "set %s failed: %s", f->key, esp_err_to_name(err));
       nvs_close(h);

@@ -62,7 +62,7 @@ static void html_escape(const char* in, char* out, size_t cap) {
 
 static const char* const kGroupOrder[] = {
   "Network", "System", "Display", "Service",
-  "Display wiring", "W5500 wiring", "GPS wiring", "DS3231 wiring", nullptr
+  "Display wiring", "W5500 wiring", "GPS wiring", "DS3231 wiring", "Status LEDs", nullptr
 };
 
 void WebServer::renderField(char** pp, char* end, int i) {
@@ -319,6 +319,11 @@ void WebServer::handleConfigPost(char* body) {
     return;
   }
 
+  if (!cfg_led_pins_valid()) {
+    sendStatus("400 Bad Request", "text/plain",
+               "Rejected: Status LED GPIO is invalid, reserved, or already assigned. Nothing was written.");
+    return;
+  }
   bool changed = cfg_dirty();
   esp_err_t err = cfg_commit();
   if (err != ESP_OK) {
