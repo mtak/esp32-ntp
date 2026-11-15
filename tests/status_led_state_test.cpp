@@ -33,4 +33,15 @@ int main() {
   assert(led.lockDuty == 0 && led.ppsDuty == 0);
   led.update(true, 8, 1400000, 0, 0);
   assert(led.ppsDuty == 0);
+
+  // A captured edge must flash on every second, regardless of whether NMEA
+  // paired with it. The LED state has no NMEA or discipline input.
+  StatusLedState activity(20);
+  for (uint32_t pulse = 21; pulse <= 25; ++pulse) {
+    int64_t edgeUs = (int64_t)pulse * 1000000;
+    activity.update(false, pulse, edgeUs, 0, 50);
+    assert(activity.ppsDuty == 512);
+    activity.update(false, pulse, edgeUs + 75000, 0, 50);
+    assert(activity.ppsDuty == 0);
+  }
 }
