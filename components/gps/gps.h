@@ -99,7 +99,9 @@ public:
   GpsDiscipline();
   esp_err_t begin(int uartPort, int baud, int txPin, int rxPin, int ppsGpio);
   bool isLocked() const;   // true while disciplined OR in credible holdover
-  uint32_t getAcceptedPpsCount() const { return __atomic_load_n(&acceptedPpsCount, __ATOMIC_RELAXED); }
+  // Completed MCPWM capture callbacks. The LED task observes this without
+  // adding work to the capture ISR or requiring an NMEA time label.
+  uint32_t getCapturedPpsCount() const { return (ppsSeq & ~1U) >> 1; }
   // Get last PPS in NTP epoch seconds and fractional 32-bit
   bool getLastPps(uint32_t& sec1900, uint32_t& frac) const;
   uint64_t getLastPpsMonotonicUs() const { return lastPpsMonotonicUs; }
@@ -233,7 +235,6 @@ private:
   double statFrequencyPpm;
   double statPpsJitterSec;
   uint32_t statPpsCount;
-  uint32_t acceptedPpsCount;    // good PPS samples, observed by optional status LEDs
   uint32_t ppsRejectCount;       // PPS pulses rejected as outliers
   uint64_t prevPpsMonotonicUs;   // previous PPS edge for jitter calc
   double ppsIntervalMeanUs;      // EWMA mean of inter-PPS interval

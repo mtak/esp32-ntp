@@ -25,7 +25,7 @@ deployed clock needs no rebuild and no serial cable. See [Configuration](#config
 - **Self-healing:** task watchdog reboots on a hang, and a W5500 health check restarts the
   device if the network chip wedges.
 - **Optional display:** MAX7219 LED matrices on SPI, or an SSD1306 or SH1106 OLED on I2C.
-- **Optional status LEDs:** separate LOCK and accepted-PPS indicators with hardware PWM brightness.
+- **Optional status LEDs:** separate LOCK and PPS activity indicators with hardware PWM brightness.
 
 ## Accuracy
 
@@ -256,7 +256,8 @@ network on the next restart.
 
 **Advanced → Status LEDs** offers two optional active-HIGH outputs. `led.lock` follows the
 same synchronization and holdover state used by NTP; `led.pps` flashes for about 75 ms on
-each accepted PPS sample. Both GPIOs default to `-1` (disabled). Connect each LED with an
+each captured PPS edge, even when the NMEA time label for that edge is rejected. Both GPIOs
+default to `-1` (disabled). Connect each LED with an
 external current-limiting resistor. LEDC hardware generates the 1 kHz PWM without software
 PWM interrupts. The separate 0–100% brightness settings help balance different LED colors;
 the percentage is PWM duty cycle, not calibrated perceived brightness. All four settings

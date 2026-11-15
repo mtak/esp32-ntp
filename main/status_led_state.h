@@ -23,11 +23,11 @@ struct StatusLedState {
   explicit StatusLedState(uint32_t initialPps)
     : seenPps(initialPps), ppsUntilUs(0), lockDuty(0), ppsDuty(0) {}
 
-  void update(bool locked, uint32_t acceptedPps, int64_t nowUs,
+  void update(bool locked, uint32_t capturedPps, int64_t nowUs,
               int lockBrightness, int ppsBrightness) {
     lockDuty = locked ? status_led_duty(lockBrightness) : 0;
-    if (acceptedPps != seenPps) {
-      seenPps = acceptedPps;
+    if (capturedPps != seenPps) {
+      seenPps = capturedPps;
       ppsUntilUs = ppsBrightness > 0 ? nowUs + 75000 : 0;
     }
     ppsDuty = nowUs < ppsUntilUs ? status_led_duty(ppsBrightness) : 0;

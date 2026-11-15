@@ -38,9 +38,9 @@ static esp_err_t set_duty(ledc_channel_t channel, uint32_t duty) {
 }
 
 static void led_task(void*) {
-  StatusLedState state(s_led.gps->getAcceptedPpsCount());
+  StatusLedState state(s_led.gps->getCapturedPpsCount());
   for (;;) {
-    state.update(s_led.gps->isLocked(), s_led.gps->getAcceptedPpsCount(),
+    state.update(s_led.gps->isLocked(), s_led.gps->getCapturedPpsCount(),
                  esp_timer_get_time(), s_led.lockBrightness, s_led.ppsBrightness);
     if (s_led.lockEnabled && state.lockDuty != s_led.lockDuty) {
       if (set_duty(kLockChannel, state.lockDuty) != ESP_OK) break;
