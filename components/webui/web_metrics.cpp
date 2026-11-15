@@ -125,7 +125,7 @@ void WebServer::sendMetrics() {
     "# HELP ntp_tx_correction_us Self-calibrated transmit-path correction added to t3\n"
     "# TYPE ntp_tx_correction_us gauge\n"
     "ntp_tx_correction_us %.1f\n"
-    "# HELP ntp_reset_reason esp_reset_reason() of the last boot (1=POWERON,4=SW,7=TASK_WDT,8=INT_WDT,9=BROWNOUT)\n"
+    "# HELP ntp_reset_reason esp_reset_reason() of the last boot (1=POWERON,3=SW,4=PANIC,5=INT_WDT,6=TASK_WDT,7=WDT,8=DEEPSLEEP,9=BROWNOUT)\n"
     "# TYPE ntp_reset_reason gauge\n"
     "ntp_reset_reason %d\n"
     "# HELP ntp_boot_count Boots since flash (persisted in NVS; a jump = auto-recovery)\n"
@@ -447,7 +447,7 @@ void WebServer::sendMetrics() {
      * percentile can be read off directly rather than inferred from an EWMA. */
     blen += snprintf(body + blen, blen < cap ? cap - blen : 0,
       "# HELP ntp_int_to_send_us_bucket Cumulative histogram of arrival-edge to SEND\n"
-      "# TYPE ntp_int_to_send_us_bucket histogram\n");
+      "# TYPE ntp_int_to_send_us_bucket counter\n");
     uint32_t cum = 0;
     for (int i = 0; i < NTP_PROF_BUCKETS && blen < cap - 128; ++i) {
       cum += ntp_prof_bucket(i);

@@ -11,7 +11,7 @@
   ],
   "timezone": "browser",
   "schemaVersion": 39,
-  "version": 1,
+  "version": 2,
   "refresh": "30s",
   "time": {
     "from": "now-6h",
@@ -457,7 +457,7 @@
       "collapsed": false,
       "gridPos": {
         "x": 0,
-        "y": 6,
+        "y": 11,
         "w": 24,
         "h": 1
       },
@@ -474,7 +474,7 @@
       },
       "gridPos": {
         "x": 0,
-        "y": 7,
+        "y": 12,
         "w": 12,
         "h": 8
       },
@@ -529,7 +529,7 @@
       },
       "gridPos": {
         "x": 12,
-        "y": 7,
+        "y": 12,
         "w": 12,
         "h": 8
       },
@@ -604,7 +604,7 @@
       },
       "gridPos": {
         "x": 0,
-        "y": 15,
+        "y": 20,
         "w": 12,
         "h": 8
       },
@@ -659,7 +659,7 @@
       },
       "gridPos": {
         "x": 12,
-        "y": 15,
+        "y": 20,
         "w": 12,
         "h": 8
       },
@@ -714,7 +714,7 @@
       },
       "gridPos": {
         "x": 0,
-        "y": 23,
+        "y": 28,
         "w": 12,
         "h": 8
       },
@@ -769,7 +769,7 @@
       },
       "gridPos": {
         "x": 12,
-        "y": 23,
+        "y": 28,
         "w": 12,
         "h": 8
       },
@@ -826,15 +826,15 @@
     {
       "id": 15,
       "type": "timeseries",
-      "title": "Capture clock fit",
-      "description": "Fit validity is 1 when solved; sample count is the current fit window.",
+      "title": "Capture fit window samples",
+      "description": "Points in the current 240-second fit window. Fit validity is shown in the status row.",
       "datasource": {
         "type": "prometheus",
         "uid": "${datasource}"
       },
       "gridPos": {
         "x": 0,
-        "y": 31,
+        "y": 36,
         "w": 12,
         "h": 8
       },
@@ -845,19 +845,9 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "ntp_gps_fit_valid{instance=~\"${instance:regex}\"}",
-          "legendFormat": "Valid",
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "editorMode": "code",
           "expr": "ntp_gps_fit_samples{instance=~\"${instance:regex}\"}",
           "legendFormat": "Samples",
-          "refId": "B"
+          "refId": "A"
         }
       ],
       "fieldConfig": {
@@ -899,7 +889,7 @@
       },
       "gridPos": {
         "x": 12,
-        "y": 31,
+        "y": 36,
         "w": 12,
         "h": 8
       },
@@ -960,7 +950,7 @@
       "collapsed": false,
       "gridPos": {
         "x": 0,
-        "y": 39,
+        "y": 44,
         "w": 24,
         "h": 1
       },
@@ -977,7 +967,7 @@
       },
       "gridPos": {
         "x": 0,
-        "y": 40,
+        "y": 45,
         "w": 6,
         "h": 5
       },
@@ -1062,7 +1052,7 @@
       },
       "gridPos": {
         "x": 6,
-        "y": 40,
+        "y": 45,
         "w": 6,
         "h": 5
       },
@@ -1139,7 +1129,7 @@
       },
       "gridPos": {
         "x": 12,
-        "y": 40,
+        "y": 45,
         "w": 6,
         "h": 5
       },
@@ -1197,7 +1187,7 @@
       },
       "gridPos": {
         "x": 18,
-        "y": 40,
+        "y": 45,
         "w": 6,
         "h": 5
       },
@@ -1255,7 +1245,7 @@
       },
       "gridPos": {
         "x": 0,
-        "y": 45,
+        "y": 50,
         "w": 12,
         "h": 8
       },
@@ -1330,7 +1320,7 @@
       },
       "gridPos": {
         "x": 12,
-        "y": 45,
+        "y": 50,
         "w": 12,
         "h": 8
       },
@@ -1385,7 +1375,7 @@
       },
       "gridPos": {
         "x": 0,
-        "y": 53,
+        "y": 58,
         "w": 12,
         "h": 10
       },
@@ -1443,7 +1433,7 @@
       },
       "gridPos": {
         "x": 12,
-        "y": 53,
+        "y": 58,
         "w": 12,
         "h": 10
       },
@@ -1514,7 +1504,7 @@
       "collapsed": false,
       "gridPos": {
         "x": 0,
-        "y": 63,
+        "y": 68,
         "w": 24,
         "h": 1
       },
@@ -1531,7 +1521,7 @@
       },
       "gridPos": {
         "x": 0,
-        "y": 64,
+        "y": 69,
         "w": 12,
         "h": 8
       },
@@ -1596,7 +1586,7 @@
       },
       "gridPos": {
         "x": 12,
-        "y": 64,
+        "y": 69,
         "w": 12,
         "h": 8
       },
@@ -1671,7 +1661,7 @@
       },
       "gridPos": {
         "x": 0,
-        "y": 72,
+        "y": 77,
         "w": 12,
         "h": 8
       },
@@ -1726,7 +1716,7 @@
       },
       "gridPos": {
         "x": 12,
-        "y": 72,
+        "y": 77,
         "w": 12,
         "h": 8
       },
@@ -1801,7 +1791,7 @@
       },
       "gridPos": {
         "x": 0,
-        "y": 80,
+        "y": 85,
         "w": 12,
         "h": 8
       },
@@ -1866,7 +1856,7 @@
       },
       "gridPos": {
         "x": 12,
-        "y": 80,
+        "y": 85,
         "w": 12,
         "h": 8
       },
@@ -1927,7 +1917,7 @@
       "collapsed": false,
       "gridPos": {
         "x": 0,
-        "y": 88,
+        "y": 93,
         "w": 24,
         "h": 1
       },
@@ -1944,7 +1934,7 @@
       },
       "gridPos": {
         "x": 0,
-        "y": 89,
+        "y": 94,
         "w": 4,
         "h": 5
       },
@@ -2021,7 +2011,7 @@
       },
       "gridPos": {
         "x": 4,
-        "y": 89,
+        "y": 94,
         "w": 4,
         "h": 5
       },
@@ -2079,7 +2069,7 @@
       },
       "gridPos": {
         "x": 8,
-        "y": 89,
+        "y": 94,
         "w": 4,
         "h": 5
       },
@@ -2137,7 +2127,7 @@
       },
       "gridPos": {
         "x": 12,
-        "y": 89,
+        "y": 94,
         "w": 4,
         "h": 5
       },
@@ -2188,14 +2178,14 @@
       "id": 38,
       "type": "stat",
       "title": "Reset reason",
-      "description": "ESP-IDF esp_reset_reason_t values. The firmware HELP text lists incorrect numbers for some watchdog reasons.",
+      "description": "ESP-IDF esp_reset_reason_t values.",
       "datasource": {
         "type": "prometheus",
         "uid": "${datasource}"
       },
       "gridPos": {
         "x": 16,
-        "y": 89,
+        "y": 94,
         "w": 4,
         "h": 5
       },
@@ -2300,7 +2290,7 @@
       },
       "gridPos": {
         "x": 20,
-        "y": 89,
+        "y": 94,
         "w": 4,
         "h": 5
       },
@@ -2358,7 +2348,7 @@
       },
       "gridPos": {
         "x": 0,
-        "y": 94,
+        "y": 99,
         "w": 12,
         "h": 8
       },
@@ -2423,7 +2413,7 @@
       },
       "gridPos": {
         "x": 12,
-        "y": 94,
+        "y": 99,
         "w": 12,
         "h": 8
       },
@@ -2478,7 +2468,7 @@
       },
       "gridPos": {
         "x": 0,
-        "y": 102,
+        "y": 107,
         "w": 12,
         "h": 8
       },
@@ -2543,7 +2533,7 @@
       },
       "gridPos": {
         "x": 12,
-        "y": 102,
+        "y": 107,
         "w": 12,
         "h": 8
       },
@@ -2624,7 +2614,7 @@
       "collapsed": false,
       "gridPos": {
         "x": 0,
-        "y": 110,
+        "y": 115,
         "w": 24,
         "h": 1
       },
@@ -2641,7 +2631,7 @@
       },
       "gridPos": {
         "x": 0,
-        "y": 111,
+        "y": 116,
         "w": 6,
         "h": 5
       },
@@ -2718,7 +2708,7 @@
       },
       "gridPos": {
         "x": 6,
-        "y": 111,
+        "y": 116,
         "w": 6,
         "h": 5
       },
@@ -2791,7 +2781,7 @@
       },
       "gridPos": {
         "x": 12,
-        "y": 111,
+        "y": 116,
         "w": 6,
         "h": 5
       },
@@ -2864,7 +2854,7 @@
       },
       "gridPos": {
         "x": 18,
-        "y": 111,
+        "y": 116,
         "w": 6,
         "h": 5
       },
@@ -2922,7 +2912,7 @@
       },
       "gridPos": {
         "x": 0,
-        "y": 116,
+        "y": 121,
         "w": 12,
         "h": 8
       },
@@ -2987,7 +2977,7 @@
       },
       "gridPos": {
         "x": 12,
-        "y": 116,
+        "y": 121,
         "w": 12,
         "h": 8
       },
@@ -3021,6 +3011,1707 @@
           "expr": "ntp_pps_flywheel_ns{instance=~\"${instance:regex}\"} and on(instance) (ntp_tcxo_valid{instance=~\"${instance:regex}\"} == 1)",
           "legendFormat": "Flywheel correction",
           "refId": "C"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      }
+    },
+    {
+      "id": 51,
+      "type": "stat",
+      "title": "Prometheus scrape",
+      "description": "Prometheus target health. This remains visible when the device metrics are missing.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 6,
+        "w": 6,
+        "h": 5
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "up{instance=~\"${instance:regex}\"}",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": false
+          },
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "Down",
+                  "color": "red"
+                },
+                "1": {
+                  "text": "Up",
+                  "color": "green"
+                }
+              }
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 52,
+      "type": "stat",
+      "title": "RMC time valid",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "x": 6,
+        "y": 6,
+        "w": 6,
+        "h": 5
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "gps_time_valid{instance=~\"${instance:regex}\"}",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": false
+          },
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "Invalid",
+                  "color": "red"
+                },
+                "1": {
+                  "text": "Valid",
+                  "color": "green"
+                }
+              }
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 53,
+      "type": "stat",
+      "title": "PPS edges / s",
+      "description": "Should be near 1/s during normal PPS reception.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 6,
+        "w": 6,
+        "h": 5
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "rate(ntp_pps_count{instance=~\"${instance:regex}\"}[$__rate_interval])",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 54,
+      "type": "stat",
+      "title": "GPS fit valid",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "x": 18,
+        "y": 6,
+        "w": 6,
+        "h": 5
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "ntp_gps_fit_valid{instance=~\"${instance:regex}\"}",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": false
+          },
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "Unsolved",
+                  "color": "red"
+                },
+                "1": {
+                  "text": "Solved",
+                  "color": "green"
+                }
+              }
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 55,
+      "type": "row",
+      "title": "Satellite geometry and signal detail",
+      "collapsed": false,
+      "gridPos": {
+        "x": 0,
+        "y": 129,
+        "w": 24,
+        "h": 1
+      },
+      "panels": []
+    },
+    {
+      "id": 56,
+      "type": "timeseries",
+      "title": "Signal strength (dB-Hz)",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 130,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "ntp_gps_cn0_mean_db{instance=~\"${instance:regex}\"}",
+          "legendFormat": "Mean",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "ntp_gps_cn0_max_db{instance=~\"${instance:regex}\"}",
+          "legendFormat": "Strongest",
+          "refId": "B"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      }
+    },
+    {
+      "id": 57,
+      "type": "bargauge",
+      "title": "Satellite elevation (degrees)",
+      "description": "Elevation of each satellite in view; low elevation often means weaker signals.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 130,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "gps_satellite_elevation_degrees{instance=~\"${instance:regex}\"}",
+          "legendFormat": "{{gnss}} {{svid}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": false
+          },
+          "min": 0,
+          "max": 90
+        },
+        "overrides": []
+      },
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      }
+    },
+    {
+      "id": 58,
+      "type": "bargauge",
+      "title": "Satellite azimuth (degrees)",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 138,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "gps_satellite_azimuth_degrees{instance=~\"${instance:regex}\"}",
+          "legendFormat": "{{gnss}} {{svid}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": false
+          },
+          "min": 0,
+          "max": 360
+        },
+        "overrides": []
+      },
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      }
+    },
+    {
+      "id": 59,
+      "type": "bargauge",
+      "title": "Satellites used in solution",
+      "description": "1 means the satellite contributes to the navigation solution.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 138,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "gps_satellite_used{instance=~\"${instance:regex}\"}",
+          "legendFormat": "{{gnss}} {{svid}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": false
+          },
+          "min": 0,
+          "max": 1
+        },
+        "overrides": []
+      },
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      }
+    },
+    {
+      "id": 60,
+      "type": "stat",
+      "title": "Latitude (degrees)",
+      "description": "Coordinates are exposed by the device and visible to dashboard viewers.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 146,
+        "w": 8,
+        "h": 5
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "gps_latitude_degrees{instance=~\"${instance:regex}\"}",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 61,
+      "type": "stat",
+      "title": "Longitude (degrees)",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "x": 8,
+        "y": 146,
+        "w": 8,
+        "h": 5
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "gps_longitude_degrees{instance=~\"${instance:regex}\"}",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 62,
+      "type": "stat",
+      "title": "Altitude MSL (m)",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "x": 16,
+        "y": 146,
+        "w": 8,
+        "h": 5
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "gps_altitude_msl_meters{instance=~\"${instance:regex}\"}",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 63,
+      "type": "row",
+      "title": "Capture and holdover diagnostics",
+      "collapsed": false,
+      "gridPos": {
+        "x": 0,
+        "y": 151,
+        "w": 24,
+        "h": 1
+      },
+      "panels": []
+    },
+    {
+      "id": 64,
+      "type": "timeseries",
+      "title": "Capture clock offset (ns)",
+      "description": "PPS offset against the capture clock. Compare with clock offset.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 152,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "ts2phc_offset_ns{instance=~\"${instance:regex}\"}",
+          "legendFormat": "{{clock}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      }
+    },
+    {
+      "id": 65,
+      "type": "timeseries",
+      "title": "Capture clock frequency error (ppb)",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 152,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "ts2phc_freq_ppb{instance=~\"${instance:regex}\"}",
+          "legendFormat": "{{clock}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      }
+    },
+    {
+      "id": 66,
+      "type": "timeseries",
+      "title": "Fitted capture ticks per second",
+      "description": "Nominally about 80 million ticks/s; zero while the fit is unsolved.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 160,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "ntp_gps_fit_ticks_per_second{instance=~\"${instance:regex}\"}",
+          "legendFormat": "{{instance}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      }
+    },
+    {
+      "id": 67,
+      "type": "timeseries",
+      "title": "RTC offset (whole seconds)",
+      "description": "This RTC measurement has whole-second resolution; zero is not evidence of subsecond agreement.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 160,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "ntp_rtc_offset_seconds{instance=~\"${instance:regex}\"}",
+          "legendFormat": "{{instance}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      }
+    },
+    {
+      "id": 68,
+      "type": "timeseries",
+      "title": "TCXO calibration samples",
+      "description": "Locked seconds incorporated into temperature compensation.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 168,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "ntp_tcxo_samples{instance=~\"${instance:regex}\"}",
+          "legendFormat": "{{instance}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      }
+    },
+    {
+      "id": 69,
+      "type": "timeseries",
+      "title": "PPS edge rate (detail)",
+      "description": "A missing or stalled PPS feed appears as zero while scraping continues.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 168,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "rate(ntp_pps_count{instance=~\"${instance:regex}\"}[$__rate_interval])",
+          "legendFormat": "PPS edges",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      }
+    },
+    {
+      "id": 70,
+      "type": "row",
+      "title": "Reply-path deep diagnostics",
+      "collapsed": false,
+      "gridPos": {
+        "x": 0,
+        "y": 176,
+        "w": 24,
+        "h": 1
+      },
+      "panels": []
+    },
+    {
+      "id": 71,
+      "type": "timeseries",
+      "title": "Reply span floor, EWMA, peak (µs)",
+      "description": "Selected stages only. Max and min are since boot; EWMA is current.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 177,
+        "w": 24,
+        "h": 9
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "ntp_path_span_min_us{instance=~\"${instance:regex}\",span=~\"total|int_to_send|arp_prime|stamp_send\"}",
+          "legendFormat": "min {{span}}",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "ntp_path_span_us{instance=~\"${instance:regex}\",span=~\"total|int_to_send|arp_prime|stamp_send\"}",
+          "legendFormat": "EWMA {{span}}",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "ntp_path_span_max_us{instance=~\"${instance:regex}\",span=~\"total|int_to_send|arp_prime|stamp_send\"}",
+          "legendFormat": "max {{span}}",
+          "refId": "C"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      }
+    },
+    {
+      "id": 72,
+      "type": "stat",
+      "title": "Reply-path sample count",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 186,
+        "w": 6,
+        "h": 5
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "ntp_path_samples{instance=~\"${instance:regex}\"}",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 73,
+      "type": "stat",
+      "title": "Late-stamp replies",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "x": 6,
+        "y": 186,
+        "w": 6,
+        "h": 5
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "ntp_tx_late_stamp_total{instance=~\"${instance:regex}\"}",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 74,
+      "type": "stat",
+      "title": "DHCP lease (s)",
+      "description": "Zero may mean a static address.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 186,
+        "w": 6,
+        "h": 5
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "ntp_dhcp_lease_seconds{instance=~\"${instance:regex}\"}",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 75,
+      "type": "stat",
+      "title": "DHCP lease reclaims",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "x": 18,
+        "y": 186,
+        "w": 6,
+        "h": 5
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "ntp_dhcp_reclaims_total{instance=~\"${instance:regex}\"}",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "id": 76,
+      "type": "timeseries",
+      "title": "SPI bytes per reply",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 191,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "ntp_spi_bytes_per_reply{instance=~\"${instance:regex}\"}",
+          "legendFormat": "Full loop",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "ntp_spi_bytes_per_reply_serve{instance=~\"${instance:regex}\"}",
+          "legendFormat": "Reply only",
+          "refId": "B"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      }
+    },
+    {
+      "id": 77,
+      "type": "timeseries",
+      "title": "SPI transactions per reply",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 191,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "ntp_spi_txns_per_reply{instance=~\"${instance:regex}\"}",
+          "legendFormat": "Full loop",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "ntp_spi_txns_per_reply_serve{instance=~\"${instance:regex}\"}",
+          "legendFormat": "Reply only",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "ntp_spi_txns_per_prime{instance=~\"${instance:regex}\"}",
+          "legendFormat": "ARP prime",
+          "refId": "C"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      }
+    },
+    {
+      "id": 78,
+      "type": "timeseries",
+      "title": "SPI interrupt-register polls per reply",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 199,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "ntp_spi_reap_polls_per_reply{instance=~\"${instance:regex}\"}",
+          "legendFormat": "SENDOK reap",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "ntp_spi_prime_polls_per_reply{instance=~\"${instance:regex}\"}",
+          "legendFormat": "ARP prime",
+          "refId": "B"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      }
+    },
+    {
+      "id": 79,
+      "type": "timeseries",
+      "title": "Transmit outcomes / s",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 199,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "rate(ntp_tx_late_stamp_total{instance=~\"${instance:regex}\"}[$__rate_interval])",
+          "legendFormat": "Late stamp",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "rate(ntp_tx_late_stamp_fallback_total{instance=~\"${instance:regex}\"}[$__rate_interval])",
+          "legendFormat": "Fallback",
+          "refId": "B"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "spanNulls": false
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      }
+    },
+    {
+      "id": 80,
+      "type": "timeseries",
+      "title": "Interrupt to SEND distribution (p50/p95, µs)",
+      "description": "Estimated from cumulative bucket counters. Requires NTP requests; bucket resolution is coarse.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 207,
+        "w": 24,
+        "h": 8
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "histogram_quantile(0.50, rate(ntp_int_to_send_us_bucket{instance=~\"${instance:regex}\"}[$__rate_interval]))",
+          "legendFormat": "p50",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "histogram_quantile(0.95, rate(ntp_int_to_send_us_bucket{instance=~\"${instance:regex}\"}[$__rate_interval]))",
+          "legendFormat": "p95",
+          "refId": "B"
         }
       ],
       "fieldConfig": {
