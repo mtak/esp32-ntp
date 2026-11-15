@@ -58,13 +58,18 @@ typedef enum {
   CFG_RTC_32K,
   CFG_DISP_OFFSET,
   CFG_DISP_SEGREMAP,
+  CFG_LED_LOCK,
+  CFG_LED_PPS,
+  CFG_LED_LOCK_BRIGHTNESS,
+  CFG_LED_PPS_BRIGHTNESS,
   CFG_COUNT
 } cfg_id_t;
 
 typedef enum { CF_BOOL, CF_INT, CF_STR, CF_PASS, CF_ENUM } cfg_type_t;
 
 typedef struct {
-  const char* key;               /* NVS key, <= 15 chars                     */
+  const char* key;               /* public setting name (form and CSV)       */
+  const char* nvs_key;           /* optional storage alias when key > 15     */
   const char* label;             /* shown in the management UI               */
   const char* group;             /* UI section heading                       */
   cfg_type_t type;
@@ -95,6 +100,8 @@ cfg_id_t cfg_lookup(const char* key);
 bool cfg_stage(cfg_id_t id, const char* value);
 bool cfg_clear(cfg_id_t id);
 bool cfg_dirty(void);
+/* Validate the final LED wiring against active peripherals and the target. */
+bool cfg_led_pins_valid(void);
 
 esp_err_t cfg_commit(void);          /* persist every staged value to NVS */
 esp_err_t cfg_factory_reset(void);   /* erase the namespace entirely      */
