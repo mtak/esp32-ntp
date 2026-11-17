@@ -32,6 +32,7 @@ static const uint8_t STATS_SOCKET = 2;
 // The response has reached SENDOK before DISCON. Give the peer a short chance
 // to finish the FIN handshake, then reclaim our only HTTP socket.
 static const int64_t DISCONNECT_TIMEOUT_US = 750000;
+static const int64_t SYN_RECV_TIMEOUT_US = 2000000;
 
 char g_req[3072];
 char g_resp[26624];
@@ -61,6 +62,7 @@ extern uint32_t g_bootCount;
 WebServer::WebServer() : sock(-1), port(0), gps(nullptr), ntp(nullptr),
                        eth(nullptr), wifi(nullptr), useWifi(false),
                        listening(false), disconnecting(false), disconnectStartUs(0),
+                       synRecvStartUs(0),
                        startupLogged(false),
                        listen_sock(-1), client_sock(-1),
                        reqLen(0), hdrEnd(-1), contentLen(0), reqStartUs(0) {}
@@ -181,6 +183,7 @@ void WebServer::loop() {
     ESP_LOGI(TAG, "Socket status changed: %d -> %d", lastStatus, status);
     lastStatus = status;
   }
+  if (status != W5K_SOCK_SYNRECV) synRecvStartUs = 0;
 
   if (disconnecting) {
     if (status == W5K_SOCK_CLOSED) {
@@ -213,6 +216,18 @@ void WebServer::loop() {
       tryStartListener();
       break;
     case W5K_SOCK_LISTEN:
+      break;
+    case W5K_SOCK_SYNRECV:
+      // TCP's three-way handshake is still in progress. Closing here resets
+      // perfectly healthy clients that happen to overlap the 100 ms poll.
+      if (synRecvStartUs == 0) synRecvStartUs = esp_timer_get_time();
+      else if (esp_timer_get_time() - synRecvStartUs >= SYN_RECV_TIMEOUT_US) {
+        ESP_LOGW(TAG, "Socket %d stuck in SYNRECV, forcing close", sock);
+        w5k_tcp_close((uint8_t)sock);
+        listening = false;
+        synRecvStartUs = 0;
+        resetRequest();
+      }
       break;
     default:
       ESP_LOGW(TAG, "Socket %d in unexpected status 0x%02x, forcing close", sock, status);

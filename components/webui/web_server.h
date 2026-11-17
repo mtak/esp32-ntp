@@ -25,6 +25,7 @@ private:
   bool listening;
   bool disconnecting;
   int64_t disconnectStartUs;
+  int64_t synRecvStartUs;
   bool startupLogged;
   int listen_sock;
   int client_sock;

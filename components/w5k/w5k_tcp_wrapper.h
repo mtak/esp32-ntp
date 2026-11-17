@@ -10,6 +10,7 @@ extern "C" {
 enum {
   W5K_SOCK_CLOSED      = 0x00,
   W5K_SOCK_LISTEN      = 0x14,
+  W5K_SOCK_SYNRECV     = 0x16,
   W5K_SOCK_ESTABLISHED = 0x17,
   W5K_SOCK_CLOSE_WAIT  = 0x1C,
 };
