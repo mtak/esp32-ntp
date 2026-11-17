@@ -505,12 +505,16 @@ retry backs off 1 s, 2 s, then 4 s rather than waiting 4 s to notice.
 | `ntp_stratum` | NTP stratum (1 when locked) |
 | `ntp_uptime_seconds` | Seconds since boot |
 | `ntp_requests_total` | NTP requests served |
-| `ntp_pps_count` | PPS edges received |
+| `ntp_pps_count` | PPS pulses paired with UTC and applied to the clock |
+| `ntp_pps_capture_total` / `ntp_pps_capture_age_seconds` | Raw PPS edges and age of the latest edge, even without valid NMEA |
+| `ntp_pps_interval_microseconds` | Latest hardware-captured PPS interval |
 | `ntp_pps_rejects_total` | PPS pulses rejected as outliers |
+| `ntp_nmea_late_total` | Isolated late RMC labels bridged using the previous PPS |
+| `ntp_nmea_mispair_total` | PPS pulses skipped because their time label disagreed with the clock |
 | `ntp_rx_irq_total` | W5500 RX interrupts captured (hardware arrival edges) |
 | `ntp_tx_correction_us` | Self-calibrated transmit-path correction added to `t3` (basic mode only) |
 | `ntp_interleaved_served_total` | Replies answered in interleaved mode (RFC 9769) |
-| `ntp_reset_reason` | `esp_reset_reason()` of the last boot (1=power-on, 7=task WDT, 8=int WDT, 9=brownout) |
+| `ntp_reset_reason` | `esp_reset_reason()` of the last boot (1=power-on, 3=software, 4=panic, 5=interrupt WDT, 6=task WDT, 9=brownout) |
 | `ntp_boot_count` | Boots since flash (NVS-persisted, so a jump means it auto-recovered) |
 | `ntp_main_loop_beats` | Core-0 main-loop heartbeat |
 | `ntp_free_heap_bytes` / `ntp_min_free_heap_bytes` | Current / lowest-ever free heap |

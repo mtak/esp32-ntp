@@ -91,7 +91,7 @@ void WebServer::sendMetrics() {
     "# HELP ntp_requests_total Total NTP requests served\n"
     "# TYPE ntp_requests_total counter\n"
     "ntp_requests_total %" PRIu32 "\n"
-    "# HELP ntp_pps_count Total PPS edges received\n"
+    "# HELP ntp_pps_count PPS pulses paired with UTC and applied to the clock\n"
     "# TYPE ntp_pps_count counter\n"
     "ntp_pps_count %" PRIu32 "\n"
     "# HELP ntp_pps_capture_total Raw MCPWM rising edges, including without valid UTC\n"

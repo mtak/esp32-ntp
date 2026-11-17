@@ -881,7 +881,7 @@
     {
       "id": 16,
       "type": "timeseries",
-      "title": "PPS rejects and NMEA mispairs / hour",
+      "title": "PPS pairing events / hour",
       "description": "Rolling one-hour increases; counter resets are handled by Prometheus.",
       "datasource": {
         "type": "prometheus",
@@ -913,6 +913,16 @@
           "expr": "increase(ntp_nmea_mispair_total{instance=~\"${instance:regex}\"}[1h])",
           "legendFormat": "NMEA mispairs",
           "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "increase(ntp_nmea_late_total{instance=~\"${instance:regex}\"}[1h])",
+          "legendFormat": "Late RMC bridged",
+          "refId": "C"
         }
       ],
       "fieldConfig": {
