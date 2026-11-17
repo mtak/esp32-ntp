@@ -24,6 +24,7 @@ private:
   bool useWifi;
   bool listening;
   bool disconnecting;
+  int64_t disconnectStartUs;
   bool startupLogged;
   int listen_sock;
   int client_sock;
@@ -42,6 +43,7 @@ private:
   void sendAll(const char* data, int len);
   void sendStatus(const char* status, const char* ctype, const char* body);
   void closeConn();
+  void startW5500Disconnect();
   void sendMetrics();
   void sendConfigPage(const char* notice);
   void renderSection(char** pp, char* end, bool advanced);

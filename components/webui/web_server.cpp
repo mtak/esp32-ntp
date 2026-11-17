@@ -29,6 +29,7 @@
 static const char* TAG = "WEBUI";
 
 static const uint8_t STATS_SOCKET = 2;
+static const int64_t DISCONNECT_TIMEOUT_US = 3000000;
 
 char g_req[3072];
 char g_resp[26624];
@@ -57,7 +58,8 @@ extern uint32_t g_bootCount;
 
 WebServer::WebServer() : sock(-1), port(0), gps(nullptr), ntp(nullptr),
                        eth(nullptr), wifi(nullptr), useWifi(false),
-                       listening(false), disconnecting(false), startupLogged(false),
+                       listening(false), disconnecting(false), disconnectStartUs(0),
+                       startupLogged(false),
                        listen_sock(-1), client_sock(-1),
                        reqLen(0), hdrEnd(-1), contentLen(0), reqStartUs(0) {}
 
@@ -183,8 +185,14 @@ void WebServer::loop() {
       disconnecting = false;
       listening = false;
       tryStartListener();
-    } else if (status == W5K_SOCK_ESTABLISHED || status == W5K_SOCK_CLOSE_WAIT) {
-      w5k_tcp_disconnect((uint8_t)sock);
+    } else if (esp_timer_get_time() - disconnectStartUs >= DISCONNECT_TIMEOUT_US) {
+      // FIN_WAIT, CLOSING and LAST_ACK can persist when the peer disappears.
+      // This socket serves both the UI and metrics, so reclaim it locally.
+      ESP_LOGW(TAG, "Socket %d stuck closing (status=0x%02x), forcing close", sock, status);
+      w5k_tcp_close((uint8_t)sock);
+      disconnecting = false;
+      listening = false;
+      resetRequest();
     }
     return;
   }
@@ -194,8 +202,7 @@ void WebServer::loop() {
       handleConnection();
       break;
     case W5K_SOCK_CLOSE_WAIT:
-      w5k_tcp_disconnect((uint8_t)sock);
-      disconnecting = true;
+      startW5500Disconnect();
       break;
     case W5K_SOCK_CLOSED:
       ESP_LOGW(TAG, "Socket %d unexpectedly closed, re-listening", sock);
@@ -206,6 +213,10 @@ void WebServer::loop() {
     case W5K_SOCK_LISTEN:
       break;
     default:
+      ESP_LOGW(TAG, "Socket %d in unexpected status 0x%02x, forcing close", sock, status);
+      w5k_tcp_close((uint8_t)sock);
+      listening = false;
+      resetRequest();
       break;
   }
 }
@@ -219,13 +230,18 @@ void WebServer::resetRequest() {
   reqStartUs = 0;
 }
 
+void WebServer::startW5500Disconnect() {
+  w5k_tcp_disconnect((uint8_t)sock);
+  disconnectStartUs = esp_timer_get_time();
+  disconnecting = true;
+}
+
 void WebServer::closeConn() {
   if (useWifi) {
     if (client_sock >= 0) close(client_sock);
     client_sock = -1;
   } else {
-    w5k_tcp_disconnect((uint8_t)sock);
-    disconnecting = true;
+    startW5500Disconnect();
   }
   resetRequest();
 }

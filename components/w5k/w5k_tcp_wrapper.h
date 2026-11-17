@@ -31,6 +31,9 @@ int32_t w5k_tcp_send(uint8_t socket_num, const uint8_t* buf, uint16_t len);
 // Graceful disconnect (sends FIN)
 int w5k_tcp_disconnect(uint8_t socket_num);
 
+// Abort a stalled connection and release the hardware socket.
+int w5k_tcp_close(uint8_t socket_num);
+
 #ifdef __cplusplus
 }
 #endif

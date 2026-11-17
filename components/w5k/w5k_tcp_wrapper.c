@@ -22,3 +22,7 @@ int32_t w5k_tcp_send(uint8_t socket_num, const uint8_t* buf, uint16_t len) {
 int w5k_tcp_disconnect(uint8_t socket_num) {
   return w5500_tcp_discon(socket_num);
 }
+
+int w5k_tcp_close(uint8_t socket_num) {
+  return w5500_sock_close(socket_num);
+}
