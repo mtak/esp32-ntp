@@ -29,7 +29,9 @@
 static const char* TAG = "WEBUI";
 
 static const uint8_t STATS_SOCKET = 2;
-static const int64_t DISCONNECT_TIMEOUT_US = 3000000;
+// The response has reached SENDOK before DISCON. Give the peer a short chance
+// to finish the FIN handshake, then reclaim our only HTTP socket.
+static const int64_t DISCONNECT_TIMEOUT_US = 750000;
 
 char g_req[3072];
 char g_resp[26624];
