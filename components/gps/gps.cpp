@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Unlicense
 
 #include "gps.h"
+#include "pps_nmea_pair.h"
 #include <stdlib.h>
 #include "config.h"
 #include "civil_time.h"
@@ -74,7 +75,8 @@ static uint32_t unix_to_ntp_seconds(time_t unixSec) {
 GpsDiscipline::GpsDiscipline()
   : uartPort(-1), baud(0), txPin(-1), rxPin(-1), ppsGpio(-1),
     gpsLock(false), holdover(false), lastGoodPpsUs(0), lockExpiredLogged(false),
-    statMispairCount(0), mispairStreak(0),
+    statMispairCount(0), statLateNmeaCount(0), mispairStreak(0),
+    lastAcceptedPpsUnixSec(0),
     lastPpsSec1900(0), lastPpsFrac(0), lastPpsMonotonicUs(0),
     lastNmeaUnixSec(0), lastNmeaUpdateUs(0), ppsSeq(0), ppsEdgeUs(0),
     ppsCapValue(0), ppsSeqSeen(0), prevPpsCapValue(0),
@@ -960,36 +962,38 @@ void GpsDiscipline::handle_pps_deferred() {
     // --- PPS/NMEA mispair guard ---
     // ppsSec assumes the freshest RMC sentence describes the *previous*
     // second. If the receiver ever emits a sentence late, this PPS can pair
-    // with a sentence one second stale and we'd serve time exactly 1s off —
-    // confidently, at stratum 1. Once disciplined, the running clock is
-    // accurate to microseconds, so any candidate that disagrees by more than
-    // 0.5s is a mispair, not a real step. Skip it; holdover covers the gap.
-    // If the disagreement persists it's genuine (someone stepped the clock) —
-    // accept so we converge instead of free-running forever.
+    // with a sentence one second stale. A single exact repeat can be bridged
+    // from the previous accepted label and measured PPS interval. Continuing
+    // disagreement still trips the persistent-step guard.
     if (gpsLock) {
       struct timeval curTv;
       gettimeofday(&curTv, nullptr);
       double sysAtEdgeSec = (double)curTv.tv_sec + (double)curTv.tv_usec / 1e6
                           - (double)(int64_t)(esp_timer_get_time() - ppsEdgeCapture) / 1e6;
       double pairDiff = (double)ppsSec - sysAtEdgeSec;
-      if (fabs(pairDiff) > 0.5) {
+      int64_t pulseIntervalUs = lastPpsMonotonicUs
+                                ? (int64_t)(ppsEdgeCapture - lastPpsMonotonicUs) : 0;
+      PpsNmeaPair pairing = pair_pps_nmea(ppsSec, lastAcceptedPpsUnixSec,
+                                          pulseIntervalUs, pairDiff, mispairStreak);
+      mispairStreak = pairing.streak;
+      if (pairing.action == PpsNmeaAction::UsePreviousPps) {
+        ppsSec = (time_t)pairing.second;
+        statLateNmeaCount++;
+      } else if (pairing.action == PpsNmeaAction::Skip) {
         statMispairCount++;
-        mispairStreak++;
-        if (mispairStreak < 3) {
-          ESP_LOGW(TAG, "PPS/NMEA mispair suspected (%+.3fs step) — pulse skipped (%d/3)",
-                   pairDiff, mispairStreak);
-          prevPpsCapValue = capValue;   // keep interval tracking continuous
-          prevPpsMonotonicUs = ppsEdgeCapture;
-          lastAppliedTotalCorrUs = 0;
-          return;
-        }
-        ESP_LOGE(TAG, "%+.3fs step persisted %d pulses — accepting as genuine", pairDiff, mispairStreak);
+        ESP_LOGW(TAG, "PPS/NMEA mispair suspected (%+.3fs step) — pulse skipped (%d/3)",
+                 pairDiff, mispairStreak);
+        prevPpsCapValue = capValue;   // keep interval tracking continuous
+        prevPpsMonotonicUs = ppsEdgeCapture;
+        lastAppliedTotalCorrUs = 0;
+        return;
+      } else if (pairing.action == PpsNmeaAction::AcceptStep) {
+        ESP_LOGE(TAG, "%+.3fs step persisted 3 pulses — accepting as genuine", pairDiff);
         // The ring's (second -> tick) pairs straddle the step and would fit a
         // wildly wrong slope; start the model over from the new timescale.
         fitReset();
         tickInit = false;
       }
-      mispairStreak = 0;
     }
 
     // --- PPS outlier rejection gate ---
@@ -1104,6 +1108,7 @@ void GpsDiscipline::handle_pps_deferred() {
     // Anchor pair for NTP timestamp extrapolation — must only advance together
     // with lastPpsSec1900/lastPpsFrac (a holdover pulse must not move it).
     lastPpsMonotonicUs = ppsEdgeCapture;
+    lastAcceptedPpsUnixSec = ppsSec;
     // Publish the capture-tick anchor for the shared timebase (seqlock).
     anchorSeq = anchorSeq + 1;
     __sync_synchronize();
@@ -1220,6 +1225,7 @@ void GpsDiscipline::getStats(GpsStats& out) const {
   out.ppsCount = statPpsCount;
   out.ppsRejectCount = ppsRejectCount;
   out.nmeaMispairCount = statMispairCount;
+  out.nmeaLateCount = statLateNmeaCount;
   out.holdover = (gpsLock && holdover);
 
   out.fixType     = qFixType;

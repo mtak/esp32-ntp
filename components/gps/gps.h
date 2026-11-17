@@ -38,6 +38,7 @@ struct GpsStats {
     uint32_t ppsCount;        // total PPS edges received
     uint32_t ppsRejectCount;  // PPS pulses rejected as outliers
     uint32_t nmeaMispairCount;// PPS pulses skipped as PPS/NMEA second mispairs
+    uint32_t nmeaLateCount;   // late RMC labels bridged using previous PPS
     bool holdover;            // coasting on the oscillator (GPS lost, still credible)
 
     /* --- Receiver quality, parsed from GGA/GSA/GSV ---------------------
@@ -155,7 +156,9 @@ private:
   volatile int64_t lastGoodPpsUs;  // monotonic time of last full discipline (PPS + fresh NMEA)
   bool lockExpiredLogged;          // one-shot log gate for holdover expiry
   uint32_t statMispairCount;       // PPS/NMEA mispairs skipped
+  uint32_t statLateNmeaCount;      // late RMC labels bridged
   uint8_t mispairStreak;           // consecutive mispairs (persistent step accepted)
+  time_t lastAcceptedPpsUnixSec;  // uncalibrated UTC label, discipline task only
   volatile uint32_t lastPpsSec1900;
   volatile uint32_t lastPpsFrac;
   volatile uint64_t lastPpsMonotonicUs;

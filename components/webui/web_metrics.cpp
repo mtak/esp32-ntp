@@ -100,6 +100,9 @@ void WebServer::sendMetrics() {
     "# HELP ntp_nmea_mispair_total PPS pulses skipped as suspected PPS/NMEA second mispairs\n"
     "# TYPE ntp_nmea_mispair_total counter\n"
     "ntp_nmea_mispair_total %" PRIu32 "\n"
+    "# HELP ntp_nmea_late_total Late RMC labels bridged using the previous accepted PPS and a valid pulse interval\n"
+    "# TYPE ntp_nmea_late_total counter\n"
+    "ntp_nmea_late_total %" PRIu32 "\n"
     "# HELP ntp_gps_holdover 1 when coasting on the oscillator (GPS lost, sync still credible)\n"
     "# TYPE ntp_gps_holdover gauge\n"
     "ntp_gps_holdover %d\n"
@@ -263,6 +266,7 @@ void WebServer::sendMetrics() {
     gs.ppsCount,
     gs.ppsRejectCount,
     gs.nmeaMispairCount,
+    gs.nmeaLateCount,
     gs.holdover ? 1 : 0,
     ilServed,
     lateOk,
